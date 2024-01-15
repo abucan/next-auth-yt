@@ -24,7 +24,7 @@ export default function Home() {
           A simple authentication app built with Next.js, Tailwind CSS
         </p>
         <div>
-          <LoginButton>
+          <LoginButton mode='modal' asChild>
             <Button variant='secondary' size='lg'>
               Sign In
             </Button>

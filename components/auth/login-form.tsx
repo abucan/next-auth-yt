@@ -28,6 +28,7 @@ export const LoginForm = () => {
   const [error, setError] = useState<string | undefined>('');
   const [success, setSuccess] = useState<string | undefined>('');
   const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl');
   const urlError =
     searchParams.get('error') === 'OAuthAccountNotLinked'
       ? 'Email already in use with different provider!'
@@ -39,7 +40,6 @@ export const LoginForm = () => {
       email: '',
       password: '',
     },
-    // mode: 'all',
   });
 
   const onSubmit = (data: z.infer<typeof LoginSchema>) => {
@@ -47,7 +47,7 @@ export const LoginForm = () => {
     setSuccess('');
 
     startTransition(() => {
-      login(data)
+      login(data, callbackUrl)
         .then((data) => {
           if (data?.error) {
             form.reset();
@@ -63,9 +63,7 @@ export const LoginForm = () => {
             setShowTwoFactor(true);
           }
         })
-        .catch(() =>
-          setError('Something went wrong, please try again later.'),
-        );
+        .catch(() => setError('Something went wrong, please try again later.'));
     });
   };
 
@@ -77,10 +75,7 @@ export const LoginForm = () => {
       showSocial
     >
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className='space-y-6'
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
           <div className='space-y-4'>
             {showTwoFactor && (
               <FormField
@@ -141,9 +136,7 @@ export const LoginForm = () => {
                         asChild
                         className='px-0 font-normal'
                       >
-                        <Link href='/auth/reset'>
-                          Forgot password?
-                        </Link>
+                        <Link href='/auth/reset'>Forgot password?</Link>
                       </Button>
                       <FormMessage />
                     </FormItem>
@@ -154,11 +147,7 @@ export const LoginForm = () => {
           </div>
           <FormError message={error || urlError} />
           <FormSuccess message={success} />
-          <Button
-            type='submit'
-            className='w-full'
-            disabled={isPending}
-          >
+          <Button type='submit' className='w-full' disabled={isPending}>
             {showTwoFactor ? 'Verify' : 'Login'}
           </Button>
         </form>
