@@ -30,7 +30,7 @@ export const {
 
       const existingUser = await getUserById(user.id);
       if (!existingUser?.emailVerified) return false;
-      // TODO 2FA Check
+
       if (existingUser.isTwoFactorEnabled) {
         const twoFactorConfirmation =
           await getTwoFactorConfirmationByUserId(existingUser.id);
